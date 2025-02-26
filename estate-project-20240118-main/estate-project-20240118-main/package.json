@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "react-cookies": "^0.1.1",
-    "react-datepicker": "^7.2.0",
-    "react-router": "^6.24.0",
-    "react-router-dom": "^6.24.0",
-    "zustand": "^4.5.4"
-  }
-}
