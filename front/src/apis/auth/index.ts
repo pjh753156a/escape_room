@@ -1,11 +1,12 @@
-import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdCheckRequestDto, SignInRequestDto, SignUpRequestDto } from "src/apis/auth/dto/request/index";
+import { DeleteUserRequestDto, EmailAuthCheckRequestDto, EmailAuthRequestDto, GetMatchQnaDetailPasswdRequestDto, GetMatchQnaWritePasswdRequestDto, IdCheckRequestDto, SignInRequestDto, SignUpRequestDto } from "src/apis/auth/dto/request/index";
 import { SignInResponseDto } from "src/apis/auth/dto/response/index";
 import ResponseDto from "src/apis/response.dto";
 
 import axios from "axios";
-import { requestErrorHandler, requestHandler } from "src/apis/index";
+import { bearerAuthorization, requestErrorHandler, requestHandler } from "src/apis/index";
 
-import { EMAIL_AUTH_CHECK_REQUEST_URL, EMAIL_AUTH_REQUEST_URL, ID_CHECK_REQUEST_URL, SIGN_IN_REUQEST_URL, SIGN_UP_REQUEST_URL } from "src/constant";
+import { DELETE_USER_INFO_URL, EMAIL_AUTH_CHECK_REQUEST_URL, EMAIL_AUTH_REQUEST_URL, GET_MATCH_QNA_DETAIL_PASSWD_REQUEST_URL, GET_MATCH_QNA_WRITE_PASSWD_REQUEST_URL, GET_SEARCH_QNA_DETAIL_PASSWD_REQUEST_URL, GET_SEARCH_QNA_WRITE_PASSWD_REQUEST_URL, ID_CHECK_REQUEST_URL, POST_UPLOAD_FILE_REUQEST_URL, SIGN_IN_REUQEST_URL, SIGN_UP_REQUEST_URL } from "src/constant";
+import { access } from "node:fs/promises";
 
 // function: 로그인 API 함수
 export const SignInRequest = async (requestBody: SignInRequestDto) => 
@@ -51,4 +52,53 @@ export const signUpRequest = async(requestBody : SignUpRequestDto) =>
         .catch(requestErrorHandler)
     return result;
 }
-/* 최종완료 */
+
+// function: 회원탈퇴 API 함수
+export const deleteUserInfoRequest = async(requestBody : DeleteUserRequestDto, accessToken: string) => 
+{
+    const result = await axios.post(DELETE_USER_INFO_URL, requestBody, bearerAuthorization(accessToken))
+        .then(requestHandler<ResponseDto>)
+        .catch(requestErrorHandler)
+    return result;
+}
+
+// function: 글쓰기 비밀번호 일치여부 API 함수
+export const getMatchQnaWritePasswdRequest = async(requestBody:GetMatchQnaWritePasswdRequestDto, accessToken:string) => 
+{
+    const result = await axios.post(GET_MATCH_QNA_WRITE_PASSWD_REQUEST_URL, requestBody, bearerAuthorization(accessToken))
+        .then(requestHandler<ResponseDto>)
+        .catch(requestErrorHandler)
+    return result;
+}
+
+export const getMatchQnaDetailPasswdRequest = async(requestBody:GetMatchQnaDetailPasswdRequestDto, accessToken:string) => 
+{
+    const result = await axios.post(GET_MATCH_QNA_DETAIL_PASSWD_REQUEST_URL, requestBody, bearerAuthorization(accessToken))
+        .then(requestHandler<ResponseDto>)
+        .catch(requestErrorHandler)
+    return result;
+}
+
+export const getSearchQnaWritePasswdRequest = async(requestBody:GetMatchQnaWritePasswdRequestDto, accessToken:string) => 
+{
+    const result = await axios.post(GET_SEARCH_QNA_WRITE_PASSWD_REQUEST_URL, requestBody, bearerAuthorization(accessToken))
+        .then(requestHandler<ResponseDto>)
+        .catch(requestErrorHandler)
+    return result;
+}
+
+export const getSearchQnaDetailPasswdRequest = async(requestBody:GetMatchQnaDetailPasswdRequestDto, accessToken:string) => 
+{
+    const result = await axios.post(GET_SEARCH_QNA_DETAIL_PASSWD_REQUEST_URL, requestBody, bearerAuthorization(accessToken))
+        .then(requestHandler<ResponseDto>)
+        .catch(requestErrorHandler)
+    return result;
+}
+
+export const postFileUploadRequest = async(formData:FormData) =>
+{
+    const result = await axios.post(POST_UPLOAD_FILE_REUQEST_URL, formData)
+        .then(requestHandler<ResponseDto>)
+        .catch(requestErrorHandler)
+    return result;
+}

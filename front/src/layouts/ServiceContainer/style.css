@@ -1,9 +1,30 @@
-#wrapper {
+.service-container-box 
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-image: url('src/assets/image/escaperoom-tama3.png');
+
+    height: 100%;
+    width: 100%;
+
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 40% center;
+
+    flex-grow: 1;
+    min-width: 610px;
+}
+
+.wrapper {
     display: grid;
     grid-template:
         "logo topbar" 77px
         "sidenav main" minmax(944px, auto)
-        / 257px minmax(1182px, 1fr);
+        / 257px 1fr;
+    background-color: rgb(255, 255, 255);
+    border-radius: 12px;
+    transform: scale(0.95);
 }
 
 .logo-container {
@@ -120,6 +141,16 @@
     background-image: url('../../assets/image/edit-fill-icon.png');
 }
 
+/*수정한 부분*/
+.side-navigation-icon.myInfo {
+    background-image: url('../../assets/image/user_info_21971.png');
+}
+
+.active > .side-navigation-icon.myInfo {
+    background-image: url('../../assets/image/user_info_icon_180963.png');
+}
+/*수정한 부분*/
+
 .side-navigation-title {
     font-size: 16px;
     font-style: normal;
@@ -130,7 +161,7 @@
 .main-container {
     grid-area: main;
     padding: 24px;
-    min-width: 1182px;
+    width: 1182px;
     background-color: rgba(238, 238, 238, 0.5);
 }
 /* 최종완료 */

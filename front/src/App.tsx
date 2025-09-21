@@ -12,9 +12,13 @@ import QnaList from './views/service/qna/QnaList';
 import QnaUpdate from './views/service/qna/QnaUpdate';
 import QnaWrite from './views/service/qna/QnaWrite';
 
-import { AUTH_ABSOLUTE_PATH, AUTH_PATH, LOCAL_ABSOLUTE_PATH, LOCAL_PATH, QNA_DEATIL_PATH, QNA_PATH, QNA_UPDATE_PATH, QNA_WRITE_PATH, RATIO_PATH, SERVICE_PATH, SNS_PATH } from './constant';
+import { AUTH_PATH, FINAL_STAGE_PATH, GAME_END_PAGE, GAME_INTRODUCE_ABSOLUTE_PATH, GAME_INTRODUCE_PATH, LOCAL_ABSOLUTE_PATH, LOCAL_PATH, MYINFO_PATH, QNA_DEATIL_PATH, QNA_PATH, QNA_UPDATE_PATH, QNA_WRITE_PATH, RATIO_PATH, SERVICE_PATH, SNS_PATH } from './constant';
 
 import './App.css';
+import MyInfo from './views/service/MyInfo';
+import GameIntroduce from './views/GameIntroduce';
+import FinalStage from './views/FinalStage';
+import GameEndPage from './views/GameEndPage';
 
 // component: root 경로 컴포넌트 //
 function Index()
@@ -30,7 +34,7 @@ function Index()
   {
     const accessToken = cookies.accessToken;
     if (accessToken) navigator(LOCAL_ABSOLUTE_PATH);
-    else navigator(AUTH_ABSOLUTE_PATH);
+    else navigator(GAME_INTRODUCE_ABSOLUTE_PATH);
   },[]);
 
   //  render  //
@@ -45,7 +49,10 @@ function App()
     <Routes>
       <Route index element={<Index/>}/>
       <Route path={SNS_PATH} element={<Sns />} />
+      <Route path={GAME_INTRODUCE_PATH} element={<GameIntroduce/>}/>
       <Route path={AUTH_PATH} element={<Authentication />}/>
+      <Route path={FINAL_STAGE_PATH} element={<FinalStage/>} />
+      <Route path={GAME_END_PAGE} element={<GameEndPage/>}/>
       <Route path={SERVICE_PATH} element={<ServiceContainer />} >
           <Route path={LOCAL_PATH} element={<Local/>}/>
           <Route path={RATIO_PATH} element={<Ratio/>}/>
@@ -55,6 +62,7 @@ function App()
             <Route path={QNA_DEATIL_PATH} element={<QnaDetail/>}/>
             <Route path={QNA_UPDATE_PATH} element={<QnaUpdate/>}/>
           </Route>
+          <Route path={MYINFO_PATH} element={<MyInfo/>}/>
       </Route>
       <Route path='*' element={<NotFound />} />
     </Routes>

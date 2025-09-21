@@ -83,4 +83,59 @@
 
     color: rgba(138, 146, 166, 1);
 }
+
+.qna-search-box
+{   
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.qna-search-input-box
+{
+    border: 1px solid rgba(238,238,238,1);
+    border-radius: 6px;
+    padding: 8px 16px;
+    width: 300px;
+
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.qna-search-input
+{
+    border: none;
+    outline: none;
+    background: none;
+
+    width: 100%;
+
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 175%;
+
+    color: rgba(64, 64, 64, 1);
+}
+
+.qna-search-result-message
+{
+    font-family: Inter;
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 175%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.qna-search-bundle
+{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
 /* 최종완료 */

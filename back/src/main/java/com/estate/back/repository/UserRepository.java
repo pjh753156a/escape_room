@@ -5,6 +5,8 @@ import org.springframework.stereotype.Repository;
 
 import com.estate.back.entity.UserEntity;
 
+import jakarta.transaction.Transactional;
+
 // Estate 데이터베이스의 User 테이블의 작업을 위한 리포지토리
 @Repository
 public interface UserRepository extends JpaRepository<UserEntity, String>
@@ -12,5 +14,8 @@ public interface UserRepository extends JpaRepository<UserEntity, String>
     boolean existsByUserId(String userId);
     boolean existsByUserEmail(String userEmail);
     UserEntity findByUserId(String userId);
+    @Transactional
+    void deleteByUserId(String userId);
+    UserEntity findTop1ByOrderByUserIdAsc();
 }
 /* 최종완료 */

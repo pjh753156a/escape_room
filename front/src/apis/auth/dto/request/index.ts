@@ -32,4 +32,22 @@ export interface SignUpRequestDto
     userEmail: string;
     authNumber: string;
 }
-/* 최종완료 */
+
+// description: 회원탈퇴 Request Body Dto
+export interface DeleteUserRequestDto
+{
+    userId: string;
+    userEmail: string;
+}
+
+// description: 글쓰기 비밀번호 일치여부 Request Body Dto 
+export interface GetMatchQnaWritePasswdRequestDto
+{
+    qnaWritePasswd: string;
+}
+
+// description: 글 상세보기 비밀번호 일치여부 Request Body Dto
+export interface GetMatchQnaDetailPasswdRequestDto
+{
+    qnaDetailPasswd: string;
+}

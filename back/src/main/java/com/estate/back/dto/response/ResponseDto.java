@@ -105,5 +105,12 @@ public class ResponseDto
             new ResponseDto(ResponseCode.DATABASE_ERROR,ResponseMessage.DATABASE_ERROR);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(responseBody);
     }
+
+    public static ResponseEntity<ResponseDto> passwordDoesNotMatch()
+    {
+        ResponseDto responseBody =
+            new ResponseDto(ResponseCode.PASSWORD_DOES_NOT_MATCH,ResponseMessage.PASSWORD_DOES_NOT_MATCH);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(responseBody);
+    }
 }
 /* 최종완료 */

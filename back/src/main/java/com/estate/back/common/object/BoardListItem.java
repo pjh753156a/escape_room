@@ -22,9 +22,7 @@ public class BoardListItem
     {
         String writeDatetime = ChangeDateFormatUtil.changeYYMMDD(boardEntity.getWriteDatetime());
         String writerId = boardEntity.getWriterId();
-        writerId = writerId.substring(0, 1)+
-        "*".repeat(writerId.length()-1);
-
+    
         this.writerId = writerId;
         this.writeDatetime = writeDatetime;
         this.title = boardEntity.getTitle();

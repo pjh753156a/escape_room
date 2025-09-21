@@ -20,6 +20,7 @@ const listItem = [
     { name: '울산' , value: 'ULSAN' },
     { name: '세종' , value: 'SAEJONG' },
     { name: '경기' , value: 'GYEONGGI' },
+    { name: 'Hint' , value: 'Hint' },
 ];
 
 //                    component                    //

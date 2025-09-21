@@ -71,7 +71,6 @@ public class BoardServiceImplementation implements BoardService
         }
         catch(Exception exception)
         {
-            exception.printStackTrace();
             return ResponseDto.databaseError();
         }
     }

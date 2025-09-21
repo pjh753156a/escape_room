@@ -2,8 +2,8 @@ import { ChangeEvent, KeyboardEvent, useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import { useNavigate, useParams } from "react-router";
 
-import SignInBackground from 'src/assets/image/sign-in-background.png';
-import SignUpBackground from 'src/assets/image/sign-up-background.png';
+import SignInBackground from 'src/assets/image/escaperoom-tama.png';
+import SignUpBackground from 'src/assets/image/escaperoom-tama.png';
 import InputBox from "src/components/Inputbox";
 
 import { EmailAuthCheckRequestDto, EmailAuthRequestDto, IdCheckRequestDto, SignInRequestDto, SignUpRequestDto } from "src/apis/auth/dto/request";
@@ -12,9 +12,10 @@ import ResponseDto from "src/apis/response.dto";
 
 import { IdCheckRequest, SignInRequest, emailAuthCheckRequest, emailAuthRequest, signUpRequest } from "src/apis/auth";
 
-import { LOCAL_ABSOLUTE_PATH } from "src/constant";
+import { FINAL_STAGE_PATH_ABSOLUTE_PATH, LOCAL_ABSOLUTE_PATH } from "src/constant";
 
 import "./style.css";
+import { useUserStore } from "src/stores";
 
 export function Sns()
 {
@@ -49,6 +50,8 @@ function SnsContainer({ title }: SnsContainerProps)
     //                    event handler                    //
     const onSnsButtonClickHandler = (type: 'kakao' | 'naver') => 
     {
+        alert("You can’t do that");
+        return;
         window.location.href = 'http://localhost:4000/api/vi/auth/oauth2/' + type;
     };
     
@@ -72,7 +75,6 @@ interface Props {
 //                    component                    //
 function SignIn({ onLinkClickHandler }: Props) 
 {
-
     //                    state                    //
     const[, setCookie] = useCookies();
     const [id, setId] = useState<string>('');
@@ -189,6 +191,12 @@ function SignUp({ onLinkClickHandler }: Props)
     const [isEmailError, setEmailError] = useState<boolean>(false);
     const [isAuthNumberError, setAuthNumberError] = useState<boolean>(false);
 
+    
+    const [RXSSPasswd, setReflectedXSSPasswd] = useState<string>("kisec");
+    (window as any).RXSSPasswd = RXSSPasswd;
+    const [IWantGetOutOfHearPasswd, setIWantGetOutOfHearPasswd] = useState<string>('anlabgooglekisec123');
+    const navigator = useNavigate();
+
     const isSignUpActive = isIdCheck && isEmailCheck && isAuthNumberCheck && isPasswordPattern && isEqualPassword;
     const signUpButtonClass = `${isSignUpActive ? 'primary' : 'disable'}-button full-width`;
     
@@ -216,7 +224,7 @@ function SignUp({ onLinkClickHandler }: Props)
             result.code === 'DE' ? '중복된 이메일입니다.':
             result.code === 'MF' ? '인증번호 전송에 실패했습니다.':
             result.code === 'DBE' ? '서버에 문제가 있습니다.':
-            result.code === 'SU' ? '인증번호가 전송되었습니다.' : '';
+            result.code === 'SU' ? '당신의 이메일은 '+result.message+' 입니다.' : '';
 
         const emailCheck = result !== null && result.code === 'SU';
         const emailError = !emailCheck;
@@ -341,15 +349,15 @@ function SignUp({ onLinkClickHandler }: Props)
     {
         if(!emailButtonStatus) return;
 
-        const emailPattern = /^[a-zA-Z0-9]*@([-.]?[a-zA-Z0-9])*\.[a-zA-Z]{2,4}$/;
-        const isEmailPattern = emailPattern.test(email);
-        if(!isEmailPattern)
-        {
-            setEmailMessage('이메일 형식이 아닙니다.'); 
-            setEmailError(true);
-            setEmailCheck(false);
-            return;
-        }
+        //const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        //const isEmailPattern = emailPattern.test(email);
+        //if(!isEmailPattern)
+        //{
+            //setEmailMessage('이메일 형식이 아닙니다.'); 
+            //setEmailError(true);
+            //setEmailCheck(false);
+            //return;
+        //}
 
         const requestBody : EmailAuthRequestDto = {userEmail:email};
         emailAuthRequest(requestBody).then(emailAuthResponse);
@@ -375,14 +383,40 @@ function SignUp({ onLinkClickHandler }: Props)
             alert('모든 내용을 입력해주세요.');
             return;
         }
-        const requestBody: SignUpRequestDto =
+
+        const inputPassword = window.prompt("input Password");
+
+        if(inputPassword === null)
         {
-            userId:id,
-            userPassword:password,
-            userEmail: email,
-            authNumber:authNumber
+            //사용자가 취소를 누름
+            return;
         }
-        signUpRequest(requestBody).then(signUpResponse);
+
+        if(!inputPassword)
+        {
+            alert("값을 입력하세요");
+            return;
+        }
+
+        if(inputPassword != IWantGetOutOfHearPasswd)
+        {
+            alert("비밀번호가 일치하지 않습니다.")
+            return;
+        }
+
+        navigator(FINAL_STAGE_PATH_ABSOLUTE_PATH);
+        return;
+
+        // const requestBody: SignUpRequestDto =
+        // {
+        //     userId:id,
+        //     userPassword:password,
+        //     userEmail: email,
+        //     authNumber:authNumber
+        // }
+
+        
+        // signUpRequest(requestBody).then(signUpResponse);
     };
     
     //                    render                    //
@@ -393,40 +427,70 @@ function SignUp({ onLinkClickHandler }: Props)
             <div className="short-divider"></div>
             <div className="authentication-input-container">
                 
-                <InputBox label="아이디" type="text" value={id} placeholder="아이디를 입력해주세요" onChangeHandler={onIdChangeHandler} buttonTitle="중복 확인" buttonStatus={idButtonStatus} onButtonClickHandler={onIdButtonClickHandler} message={idMessage} error={isIdError} />
+                <InputBox label="time-based-sqli  you must ....SLEEP(1.5), 1)" type="text" value={id} placeholder="Is user_id '00-w-00' in user?" onChangeHandler={onIdChangeHandler} buttonTitle="중복 확인" buttonStatus={idButtonStatus} onButtonClickHandler={onIdButtonClickHandler} message={idMessage} error={isIdError} />
                     
-                <InputBox label="비밀번호" type="password" value={password} placeholder="비밀번호를 입력해주세요" onChangeHandler={onPasswordChangeHandler} message={passwordMessage} error />
+                <InputBox label="delay Hint" type="password" value={password} placeholder="'anlab'+'google'+Reflected XSS+Blind SQLi" onChangeHandler={onPasswordChangeHandler} message={passwordMessage} error />
                 
-                <InputBox label="비밀번호 확인" type="password" value={passwordCheck} placeholder="비밀번호를 입력해주세요" onChangeHandler={onPasswordCheckChangeHandler} message={passwordCheckMessage} error />
+                <InputBox label="not delay Hint" type="password" value={passwordCheck} placeholder="'naver'+'kakao'+Reflected XSS+Blind SQLi" onChangeHandler={onPasswordCheckChangeHandler} message={passwordCheckMessage} error />
                 
-                <InputBox label="이메일" type="text" value={email} placeholder="이메일을 입력해주세요" onChangeHandler={onEmailChangeHandler} buttonTitle="이메일 인증" buttonStatus={emailButtonStatus} onButtonClickHandler={onEmailButtonClickHandler} message={emailMessage} error={isEmailError} />
+                <InputBox label="Reflected XSS" type="text" value={email} placeholder="RXSSPasswd=??? parent." onChangeHandler={onEmailChangeHandler} buttonTitle="이메일 인증" buttonStatus={emailButtonStatus} onButtonClickHandler={onEmailButtonClickHandler} error={isEmailError} />
+                <iframe srcDoc={emailMessage} 
+                    width="900"
+                    height="39"
+                    style={{ border: 'none', borderRadius: '8px' }}>
+                </iframe>
                 {isEmailCheck &&
-                <InputBox label="인증번호" type="text"
-                value={authNumber} placeholder="인증번호 4자리를 입력해주세요"
+                <InputBox label="Boolean-based-sqli find email_auth_number 0~9" type="text"
+                value={authNumber} placeholder="email='passwd' auth_number"
                 onChangeHandler={onAuthNumberChangeHandler}
                 buttonTitle="인증 확인" buttonStatus={authNumberButtonStatus}
                 onButtonClickHandler={onAuthNumberButtonClickHandler}
                 message={authNumberMessage} error={isAuthNumberError} />}
             </div>
             <div className="authentication-button-container">
-                <div className={signUpButtonClass} onClick={onSignUpButtonClickHandler}>회원가입</div>
+                <div className={signUpButtonClass} onClick={onSignUpButtonClickHandler}>I want get out of hear</div>
                 <div className="text-link" onClick={onLinkClickHandler}>로그인</div>
             </div>
         </div>
     );
 }
+//' OR SUBSTRING((SELECT auth_number FROM email_auth_number WHERE email='passwd'), 3, 1) = '3' --  
+//' OR LENGTH((SELECT auth_number FROM email_auth_number WHERE email = 'passwd')) = 3 -- 
 
 //                    component                    //
 export default function Authentication() 
 {
     //                    state                    //
     const [page, setPage] = useState<AuthPage>('sign-in');
+    const {authenticationPasswd} = useUserStore();
     // page = sign-up
     
     //                    event handler                    //
     const onLinkClickHandler = () => 
     {
-        if (page === 'sign-in') setPage('sign-up');
+        if (page === 'sign-in') 
+        {
+            const inputPassword = window.prompt("input Password");
+
+            if(inputPassword === null)
+            {
+                //사용자가 취소를 누름
+                return;
+            }
+
+            if(!inputPassword)
+            {
+                alert("값을 입력하세요");
+                return;
+            }
+
+            if(inputPassword != authenticationPasswd)
+            {
+                alert("비밀번호가 일치하지 않습니다.")
+                return;
+            }
+            setPage('sign-up');
+        }
         else setPage('sign-in');
     };
     
@@ -441,11 +505,14 @@ export default function Authentication()
     //                    render                    //
     return (
         <div id="authentication-wrapper">
-            <div className="authentication-image-box" style={imageBoxStyle}></div>
+            {/*<div className="authentication-image-box" style={imageBoxStyle}></div>*/}
             <div className="authentication-box">
                 <div className="authentication-container">
                     <div className="authentication-title h1">
-                        {"임대 주택 가격서비스"}
+                        {"사이트 한번 뚫어봐"}
+                    </div>
+                    <div className="authentication-title h1">
+                        {"그럼 방에서 나갈 수 있어"}
                     </div>
                     { AuthenticationContents }
                 </div>

@@ -107,4 +107,34 @@ CREATE TABLE `estate` (
     `month_rent_ratio85` DOUBLE
 );
 
+CREATE TABLE `qna_write_passwd` (
+    num INT PRIMARY KEY AUTO_INCREMENT,
+    user_id VARCHAR(50),
+    qna_write_passwd VARCHAR(100)
+);
+
+
+CREATE TABLE qna_detail_passwd (
+    num INT PRIMARY KEY AUTO_INCREMENT,
+    user_id VARCHAR(50),
+    qna_detail_passwd VARCHAR(100)
+);
+
+INSERT INTO qna_write_passwd (user_id, qna_write_passwd) VALUES
+('kim123', 'pass1'),
+('lee456', 'pass2'),
+('park789', 'pass3'),
+('choi999', 'pass4'),
+('qna_write_passwd', '070a');
+
+INSERT INTO qna_detail_passwd (user_id, qna_detail_passwd) VALUES
+('user01', 'pwd01'),
+('user02', 'pwd02'),
+('user03', 'pwd03'),
+('user04', 'pwd04'),
+('admin', 'adminpwd'),
+('guest', '1234'),
+('qna_detail_passwd', '9qas');
+
+
 ### /* 최종완료 */

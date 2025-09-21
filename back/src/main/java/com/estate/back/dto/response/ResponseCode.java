@@ -6,6 +6,7 @@ package com.estate.back.dto.response;
 // 400 중복된 이메일: DE/Duplicatied Email.
 // 401 로그인 정보 불일치: SF/Sign in Failed.
 // 401 인증 실패: AF / Authentication Failed.
+// 401 패스워드 불일치: PN / Password does not match.
 // 500 토큰 생성 실패:TF/Token creation Failed
 // 500 이메일 전송 실패:MF/Mail send Failed.
 // 500 데이터베이스오류: DBE/Database Error.
@@ -26,5 +27,6 @@ public interface ResponseCode
     String AUTHENTICATION_FAILED="AF";
     String TOKEN_CREATION_FAILED="TF";
     String AUTHORIZATION_FAILED = "AF";
+    String PASSWORD_DOES_NOT_MATCH = "PN";
 }
 /* 최종완료 */

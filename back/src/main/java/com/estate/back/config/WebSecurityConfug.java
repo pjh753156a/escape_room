@@ -56,7 +56,7 @@ public class WebSecurityConfug
             .configurationSource(corsConfigurationSource())
             )
             .authorizeHttpRequests(request -> request
-                .requestMatchers("/","/api/vi/auth/***","/oauth2/callback/*").permitAll()
+                .requestMatchers("/","/api/vi/auth/**","/api/vi/file/**","/oauth2/callback/*").permitAll()
                 .requestMatchers("api/vi/board/").hasRole("USER")
                 .requestMatchers("/api/vi/board/*/comment").hasRole("ADMIN")
                 .anyRequest().authenticated()

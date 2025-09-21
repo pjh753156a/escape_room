@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { Bar, Line } from 'react-chartjs-2';
 import { useCookies } from 'react-cookie';
 
@@ -11,6 +11,8 @@ import ResponseDto from 'src/apis/response.dto';
 import { getRatioDataRequest } from 'src/apis/estate';
 
 import './style.css';
+import { GetMatchQnaDetailPasswdRequestDto } from 'src/apis/auth/dto/request';
+import { getSearchQnaDetailPasswdRequest } from 'src/apis/auth';
 
 ChartJS.register(
     CategoryScale,
@@ -31,6 +33,8 @@ export default function Ratio() {
 
     //                    state                    //
     const [cookies] = useCookies();
+    const [resultMessage, setResultMessage] = useState<string>('');
+    const [qnaDetailPasswd,setQnaDetailPasswd] = useState<string>('');
 
     const [yearMonth,setYearMonth] = useState<string[]>([]);
     const [selectLocal, setSelectLocal] = useState<string>('');
@@ -72,6 +76,16 @@ export default function Ratio() {
             monthRentRatio40,monthRentRatio4060,monthRentRatio6085,monthRentRatio85
         } = result as GetRatioDataResponseDto;
 
+        //수정된 부분
+        const isEmpty = Object.values(result).map(value => 
+            value === undefined || value === null || value.length === 0
+        );
+        
+        if (isEmpty) {
+            setSelectLocal("qna-detail-passwd");
+        }
+        //
+
         setYearMonth(yearMonth);
         setReturn40(return40);
         setReturn4060(return4060);
@@ -88,16 +102,45 @@ export default function Ratio() {
         setMonthRentRatio6085(monthRentRatio6085);
         setMonthRentRatio85(monthRentRatio85);
     };
+
+    const getSearchQnaWritePasswdResponse = (result:ResponseDto | null) => 
+    {
+        const message =
+                !result ? '서버에 문제가 있습니다.' :
+                result.code === 'SU' ? result.message :
+                result.code === 'VF' ? '값을 입력하세요' :
+                result.code === 'AF' ? '인증에 실패했습니다.' :
+                result.code === 'PN' ? '비밀번호가 일치하지 않습니다.':
+                result.code === 'DBE' ? '서버에 문제가 있습니다.' : '';
+        
+        setResultMessage(message);
+    } 
     
     //                    event handler                    //
     const onLocalChangeHandler = (selectLocal: string) => 
     {
+        setResultMessage("");
         setSelectLocal(selectLocal);
+    };
+
+    const onSearchWordChangeHandler = (event: ChangeEvent<HTMLInputElement>) => 
+    {
+        const qnaDetailPasswd = event.target.value;
+        setQnaDetailPasswd(qnaDetailPasswd);
+    };
+
+    const onSearchButtonClickHandler = () => 
+    {
+        if (!qnaDetailPasswd || !cookies.accessToken) return;
+        const requestBody: GetMatchQnaDetailPasswdRequestDto = {qnaDetailPasswd};
+                        
+        getSearchQnaDetailPasswdRequest(requestBody, cookies.accessToken).then(getSearchQnaWritePasswdResponse);
     };
     
     const onSearchClickHandler = () => 
     {
         if(!selectLocal || !cookies.accessToken) return;
+        setResultMessage("");
         getRatioDataRequest(selectLocal,cookies.accessToken).then(getRatioDataResponse);
     };
     
@@ -188,6 +231,7 @@ export default function Ratio() {
     const monthRentRatioFlag = !!monthRentRatio40.length && !!monthRentRatio4060.length && !!monthRentRatio6085.length && !!monthRentRatio85.length;
     
     const buttonClass = selectLocal ? 'primary-button' : 'disable-button';
+    const searchButtonClass = qnaDetailPasswd ? 'primary-button' : 'disable-button';
     
     return (
         <div id='local-wrapper'>
@@ -198,7 +242,18 @@ export default function Ratio() {
                 </div>
                 <div className='local-origin-text'>데이터 출처: KOSIS</div>
             </div>
-            {!returnFlag && !leaseRatioFlag && !monthRentRatioFlag && <div className='local-no-data-text'>검색결과가 없습니다.</div>}
+            {!returnFlag && !leaseRatioFlag && !monthRentRatioFlag && (selectLocal == "qna-detail-passwd" ? 
+            (
+                <div className='qna-search-bundle'>
+                    <div className='qna-search-result-message'>{resultMessage}</div>
+                    <div className='qna-search-box'>
+                        <div className='qna-search-input-box'>
+                            <input className='qna-search-input' placeholder='Qna-Detail UNION-SQL-Injection' value={qnaDetailPasswd} onChange={onSearchWordChangeHandler} />
+                        </div>
+                        <div className={searchButtonClass} onClick={onSearchButtonClickHandler}>검색</div>
+                    </div>
+                </div>) :
+                (<div className='local-no-data-text'>검색결과가 없습니다.</div>))}
             {returnFlag &&
             <div className='local-card'>
                 <div className='local-card-title-box'>

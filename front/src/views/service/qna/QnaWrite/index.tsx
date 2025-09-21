@@ -103,3 +103,6 @@ export default function  QnaWrite()
   );
 }
 {/* 최종완료 */}
+
+// authenticationPasswd = ???? parent. parent. parent.
+// <script>alert(parent.authenticationPasswd)</script>

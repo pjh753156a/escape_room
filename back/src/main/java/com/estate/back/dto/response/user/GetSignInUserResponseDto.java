@@ -15,12 +15,14 @@ public class GetSignInUserResponseDto extends ResponseDto
 {
     private String userId;
     private String userRole;
+    private String userEmail;
     
     private GetSignInUserResponseDto(UserEntity userEntity)
     {
         super(ResponseCode.SUCCESS,ResponseMessage.SUCCESS);
         this.userId=userEntity.getUserId();
         this.userRole=userEntity.getUserRole();
+        this.userEmail=userEntity.getUserEmail();
     }
     
     public static ResponseEntity<GetSignInUserResponseDto> success(UserEntity userEntity)

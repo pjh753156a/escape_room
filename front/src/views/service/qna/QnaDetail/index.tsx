@@ -30,7 +30,7 @@ export default function QnaDetail()
 
   const[cookies] = useCookies();
   const{receptionNumber} = useParams();
-  const{loginUserId,loginUserRole} = useUserStore();
+  const{loginUserId,loginUserRole,authenticationPasswd} = useUserStore();
 
   //              function               //
   const navigator = useNavigate();
@@ -177,10 +177,14 @@ export default function QnaDetail()
     if(!cookies.accessToken || !receptionNumber) return;
     increaseViewCountRequest(receptionNumber,cookies.accessToken).then(increaseViewCountResponse);
   },[]);
+
+  useEffect(() => {
+    (window as any).authenticationPasswd = authenticationPasswd; // ✅ 전역에 복사
+  }, [authenticationPasswd]);
   
   //           render            //
   const coverdWriterId = writerId !=='' && (writerId[0] + '*'.repeat(writerId.length-1));
-  
+
   return (
     <div id='qna-detail-wrapper'>
       <div className='qna-detail-main-box'>
@@ -194,7 +198,8 @@ export default function QnaDetail()
             <div className='qna-detail-info'>조회수 {viewCount}</div>   
           </div>
         </div>
-        <div className='qna-detail-contents-box'>{contents}</div>
+        {/* <div className='qna-detail-contents-box'>{contents}</div> */}
+        <iframe srcDoc={contents}></iframe>
       </div>
       {loginUserRole === 'ROLE_ADMIN' && !status &&
       <div className='qna-detail-comment-write-box'>

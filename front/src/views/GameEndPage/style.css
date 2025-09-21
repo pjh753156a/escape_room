@@ -1,0 +1,20 @@
+.gameEndPage {
+    background-color: white;
+    background-image: url('../../assets/image/estate-office.png');
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: black;
+    font-weight: bold;
+    font-size: 2rem;
+}
+
+.gameEndTextBox{
+    background-color: rgba(255, 255, 255); /* 반투명 흰색 */
+    padding: 10px 10px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3); /* 살짝 그림자 효과 */
+    max-width: 80%;
+    text-align: center;
+}

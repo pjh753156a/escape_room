@@ -1,3 +1,4 @@
+import { Console } from "node:console";
 import { useEffect, useState } from "react";
 
 const usePagination = <T>(countPerPage: number, countPerSection: number) => {
@@ -36,11 +37,22 @@ const usePagination = <T>(countPerPage: number, countPerSection: number) => {
         setPageList(pageList);
     };
     
-    const changeBoardList = (boardList: T[], isToggleOn?: boolean) => {
-        if(isToggleOn) boardList = boardList.filter((board: any) => {
+    const changeBoardList = (boardList: T[], isAdminToggleOn?: boolean, isWriterToggleOn?: boolean, loginUserId?: string) => {
+        
+        if(isAdminToggleOn) boardList = boardList.filter((board: any) => {
             if('status' in board) return !board.status;
             return false;
         });
+
+        if(isWriterToggleOn) boardList = boardList.filter((board: any) => {
+            if(board.writerId == loginUserId) return true;
+            return false;
+        });
+
+        boardList.map((board: any) => {
+            board.writerId = board.writerId.substring(0, 1)+"*".repeat(board.writerId.length-1);
+        });
+
         setBoardList(boardList);
 
         const totalLenght = boardList.length;

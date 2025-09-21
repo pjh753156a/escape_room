@@ -14,6 +14,8 @@ import { getSearchBoardListRequest } from 'src/apis/board';
 import { AUTH_ABSOLUTE_PATH, COUNT_PER_PAGE, COUNT_PER_SECTION, QNA_DEATIL_ABSOLUTE_PATH, QNA_WRITE_ABSOLUTE_PATH } from 'src/constant';
 
 import './style.css';
+import { GetMatchQnaDetailPasswdRequestDto, GetMatchQnaWritePasswdRequestDto } from 'src/apis/auth/dto/request';
+import { getMatchQnaDetailPasswdRequest, getMatchQnaWritePasswdRequest } from 'src/apis/auth';
 
 //                    component                    //
 function ListItem ({
@@ -25,11 +27,54 @@ function ListItem ({
     viewCount
 }: BoardListItem) {
 
+    //                     state                      //
+    const [cookies] = useCookies();
+
     //                    function                    //
     const navigator = useNavigate();
+
+    const getMatchQnaDetailPasswdResponse = (result:ResponseDto | null) => {
+        const message =
+            !result ? '서버에 문제가 있습니다.' :
+            result.code === 'VF' ? '값을 입력하세요' :
+            result.code === 'AF' ? '인증에 실패했습니다.' :
+            result.code === 'PN' ? '비밀번호가 일치하지 않습니다.' :
+            result.code === 'DBE' ? '서버에 문제가 있습니다.' : '';
+
+        if (!result || result.code !== 'SU') 
+        {
+            alert(message);
+            if (result?.code === 'AF') navigator(AUTH_ABSOLUTE_PATH);
+            return;
+        }
+
+        navigator(QNA_DEATIL_ABSOLUTE_PATH(receptionNumber));
+    }
     
+    //수정
     //                    event handler                    //
-    const onClickHandler = () => navigator(QNA_DEATIL_ABSOLUTE_PATH(receptionNumber));
+    const onClickHandler = () => 
+    {
+
+        const qnaDetailPasswd = window.prompt("input Password");
+        if(qnaDetailPasswd === null)
+        {
+            //사용자가 취소를 누름
+            return;
+        }
+
+        if(!qnaDetailPasswd)
+        {
+            alert("값을 입력하세요");
+            return;
+        }
+
+        const requestBody: GetMatchQnaDetailPasswdRequestDto = {qnaDetailPasswd};
+        
+        getMatchQnaDetailPasswdRequest(requestBody, cookies.accessToken).then(getMatchQnaDetailPasswdResponse);
+    };
+ 
+
     
     //                    render                    //
     return (
@@ -53,7 +98,7 @@ function ListItem ({
 export default function QnaList() 
 {
     //                    state                    //
-    const {loginUserRole} = useUserStore();
+    const {loginUserRole, loginUserId} = useUserStore();
 
     const{
         viewList,
@@ -71,7 +116,8 @@ export default function QnaList()
 
     const [cookies] = useCookies();
     const [searchWord, setSearchWord] = useState<string>('');
-    const [isToggleOn, setToggleOn] = useState<boolean>(false);
+    const [isAdminToggleOn, setAdminToggleOn] = useState<boolean>(false);
+    const [isWriterToggleOn, setWriterToggleOn] = useState<boolean>(false);
 
     //                    function                    //
     const navigator = useNavigate();
@@ -91,22 +137,66 @@ export default function QnaList()
         }
 
         const { boardList } = result as GetSearchBoardListResponseDto;
-        changeBoardList(boardList, isToggleOn);
+        changeBoardList(boardList, isAdminToggleOn, isWriterToggleOn, loginUserId);
         setCurrentPage(!boardList.length ? 0 : 1);
         setCurrentSection(!boardList.length ? 0 : 1);
     };
+
+    //수정
+    const getMatchQnaWritePasswdResponse = (result:ResponseDto | null) => {
+        const message =
+            !result ? '서버에 문제가 있습니다.' :
+            result.code === 'VF' ? '값을 입력하세요' :
+            result.code === 'AF' ? '인증에 실패했습니다.' :
+            result.code === 'PN' ? '비밀번호가 일치하지 않습니다.':
+            result.code === 'DBE' ? '서버에 문제가 있습니다.' : '';
+
+        if (!result || result.code !== 'SU') 
+        {
+            alert(message);
+            if (result?.code === 'AF') navigator(AUTH_ABSOLUTE_PATH);
+            return;
+        }
+
+        navigator(QNA_WRITE_ABSOLUTE_PATH);
+    } 
+    //수정
     
+    //수정
     //                event handler                    //
     const onWriteButtonClickHandler = () => 
     {
         if (loginUserRole !== 'ROLE_USER') return;
-        navigator(QNA_WRITE_ABSOLUTE_PATH);
+
+        const qnaWritePasswd = window.prompt("input Password");
+        if(qnaWritePasswd === null)
+        {
+            //사용자가 취소를 누름
+            return;
+        }
+
+        if(!qnaWritePasswd)
+        {
+            alert("값을 입력하세요");
+            return;
+        }
+
+        const requestBody: GetMatchQnaWritePasswdRequestDto = {qnaWritePasswd};
+        
+        getMatchQnaWritePasswdRequest(requestBody, cookies.accessToken).then(getMatchQnaWritePasswdResponse);
     };
+    //수정
     
-    const onToggleClickHandler = () => 
+    const onAdminToggleClickHandler = () => 
     {
         if (loginUserRole !== 'ROLE_ADMIN') return;
-        setToggleOn(!isToggleOn);
+        setAdminToggleOn(!isAdminToggleOn);
+    };
+
+    const onWriterToggleClickHandler = () => 
+    {
+        if (loginUserRole !== 'ROLE_USER') return;
+        setWriterToggleOn(!isWriterToggleOn);
     };
     
     const onSearchWordChangeHandler = (event: ChangeEvent<HTMLInputElement>) => 
@@ -127,10 +217,11 @@ export default function QnaList()
     useEffect(() => {
         if (!cookies.accessToken) return;
         getSearchBoardListRequest(searchWord,cookies.accessToken).then(getSearchBoardListResponse);
-    }, [isToggleOn]);
+    }, [isAdminToggleOn,isWriterToggleOn]);
     
     //                    render                    //
-    const toggleClass = isToggleOn ? 'toggle-active' : 'toggle';
+    const AdmintoggleClass = isAdminToggleOn ? 'toggle-active' : 'toggle';
+    const WritertoggleClass = isWriterToggleOn ? 'toggle-active' : 'toggle';
     const searchButtonClass = searchWord ? 'primary-button' : 'disable-button';
     
     return (
@@ -138,13 +229,20 @@ export default function QnaList()
             <div className='qna-list-top'>
                 <div className='qna-list-size-text'>전체 <span className='emphasis'>{totalLenght}건</span> | 페이지 <span className='emphasis'>{currentPage}/{totalPage}</span></div>
                 <div className='qna-list-top-right'>
+                    {/* 수정 부분 */}
                     {loginUserRole === 'ROLE_USER' ?
-                    <div className='primary-button' onClick={onWriteButtonClickHandler}>글쓰기</div> :
                     <>
-                    <div className={toggleClass} onClick={onToggleClickHandler}></div>
+                    <div className={WritertoggleClass} onClick={onWriterToggleClickHandler}></div>
+                    <div className='qna-list-top-admin-text'>내가 쓴 글 보기</div>
+                    <div className='primary-button' onClick={onWriteButtonClickHandler}>글쓰기</div>
+                    </> 
+                    :
+                    <>
+                    <div className={AdmintoggleClass} onClick={onAdminToggleClickHandler}></div>
                     <div className='qna-list-top-admin-text'>미완료 보기</div>
                     </>
                     }
+                    {/* 수정 부분 */}
                 </div>
             </div>
             <div className='qna-list-table'>
@@ -173,7 +271,7 @@ export default function QnaList()
                 </div>
                 <div className='qna-list-search-box'>
                     <div className='qna-list-search-input-box'>
-                        <input className='qna-list-search-input' placeholder='검색어를 입력하세요.' value={searchWord} onChange={onSearchWordChangeHandler} />
+                        <input className='qna-list-search-input' placeholder='doesnt work sqli xss' value={searchWord} onChange={onSearchWordChangeHandler} />
                     </div>
                     <div className={searchButtonClass} onClick={onSearchButtonClickHandler}>검색</div>
                 </div>

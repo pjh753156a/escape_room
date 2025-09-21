@@ -9,11 +9,11 @@ import { GetSignInUserResponseDto } from 'src/apis/user/dto/response';
 
 import { getSignInUserRequest } from 'src/apis/user';
 
-import { AUTH_ABSOLUTE_PATH, LOCAL_ABSOLUTE_PATH, QNA_LIST_ABSOLUTE_PATH, RATIO_ABSOLUTE_PATH } from 'src/constant';
+import { AUTH_ABSOLUTE_PATH, LOCAL_ABSOLUTE_PATH, MYINFO_PATH_ABSOLUTE_PATH, QNA_LIST_ABSOLUTE_PATH, RATIO_ABSOLUTE_PATH } from 'src/constant';
 
 import './style.css';
 
-type Path = '지역 평균'|'비율 계산'|'Q&A 게시판'|'';
+type Path = '지역 평균'|'비율 계산'|'Q&A 게시판'|'나의 정보'|'';
 
 //              interface                   //
 interface Props
@@ -59,6 +59,7 @@ function SideNavigation({path}:Props)
   const localClass = `side-navigation-item${path === '지역 평균' ? ' active':''}`;
   const ratioClass = `side-navigation-item${path === '비율 계산' ? ' active':''}`;
   const qnaClass = `side-navigation-item${path === 'Q&A 게시판' ? ' active':''}`;
+  const myInfoClass = `side-navigation-item${path === '나의 정보' ? ' active':''}`;
 
   //                    state                     //
   const {pathname} = useLocation();
@@ -88,6 +89,11 @@ function SideNavigation({path}:Props)
           navigator(QNA_LIST_ABSOLUTE_PATH);
       }
   };
+
+  const onMyInfoClickHandler = () =>
+  {
+      navigator(MYINFO_PATH_ABSOLUTE_PATH);
+  };
   
   //                  render                  //
   return(
@@ -105,6 +111,10 @@ function SideNavigation({path}:Props)
                 <div className="side-navigation-icon edit"></div>
                 <div className="side-navigation-title">Q&A 게시판</div>
             </div>
+            <div className={myInfoClass} onClick={onMyInfoClickHandler}>
+                <div className="side-navigation-icon myInfo"></div>
+                <div className="side-navigation-title">나의 정보</div>
+            </div>
         </div>
   );
 }
@@ -115,7 +125,7 @@ export default function ServiceContainer()
   const [cookies] = useCookies();
   const {pathname} = useLocation();
   const [path,setPath] = useState<Path>('');  // path = '지역 평균'
-  const { setLoginUserId, setLoginUserRole } = useUserStore();
+  const { setLoginUserId, setLoginUserRole, setLoginUserEmail} = useUserStore();
   
   //                    function                    //
   const navigator = useNavigate();
@@ -134,9 +144,10 @@ export default function ServiceContainer()
         return;
     }
 
-    const { userId, userRole } = result as GetSignInUserResponseDto;
+    const { userId, userRole, userEmail } = result as GetSignInUserResponseDto;
     setLoginUserId(userId);
     setLoginUserRole(userRole);
+    setLoginUserEmail(userEmail);
   };
   
   //          effect              //
@@ -144,7 +155,8 @@ export default function ServiceContainer()
     const path =
       pathname === LOCAL_ABSOLUTE_PATH ? '지역 평균' :
       pathname === RATIO_ABSOLUTE_PATH ? '비율 계산' :
-      pathname.startsWith(QNA_LIST_ABSOLUTE_PATH) ? 'Q&A 게시판' : '';
+      pathname.startsWith(QNA_LIST_ABSOLUTE_PATH) ? 'Q&A 게시판' : 
+      pathname === MYINFO_PATH_ABSOLUTE_PATH ? '나의 정보' : '';
 
       setPath(path);
   },[pathname]);
@@ -162,13 +174,15 @@ export default function ServiceContainer()
 
   //            render              //
   return (
-    <div id="wrapper">
+  <div className="service-container-box"> 
+    <div className="wrapper">
         <TopBar path={path}/>
         <SideNavigation path={path}/>
         <div className="main-container">
         <Outlet />
         </div>
     </div>
+  </div> 
   )
 }
 {/* 최종완료 */}
