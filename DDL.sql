@@ -126,6 +126,9 @@ VALUES ('bagjuhyeong850@gmail.com', '1234');
 INSERT INTO email_auth_number (email, auth_number)
 VALUES ('00-g-00@naver.com', '1234');
 
+INSERT INTO email_auth_number (email, auth_number)
+VALUES ('passwd', '123');
+
 INSERT INTO user (user_id, user_password, user_email, user_role, join_path) VALUES
 ('bagjuhyeong850', 'qwer1234', 'bagjuhyeong850@gmail.com', 'ROLE_USER', 'HOME');
 
