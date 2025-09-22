@@ -1,4 +1,4 @@
--- Active: 1735318986629@@127.0.0.1@3306@estate
+-- Active: 1735318986629@@127.0.0.1@3306@back
 
 # Entity
 # - 사용자
@@ -119,6 +119,12 @@ CREATE TABLE qna_detail_passwd (
     user_id VARCHAR(50),
     qna_detail_passwd VARCHAR(100)
 );
+
+INSERT INTO email_auth_number (email, auth_number)
+VALUES ('00g00@naver.com', '1234');
+
+INSERT INTO user (user_id, user_password, user_email, user_role, join_path) VALUES
+('IamWhiteHatHacker', 'qwer1234', '00g00@naver.com', 'ROLE_USER', 'HOME');
 
 INSERT INTO qna_write_passwd (user_id, qna_write_passwd) VALUES
 ('kim123', 'pass1'),
