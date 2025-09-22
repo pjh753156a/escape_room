@@ -427,7 +427,7 @@ function SignUp({ onLinkClickHandler }: Props)
             <div className="short-divider"></div>
             <div className="authentication-input-container">
                 
-                <InputBox label="time-based-sqli  you must ....SLEEP(1.5), 1)" type="text" value={id} placeholder="Is user_id '00-w-00' in user?" onChangeHandler={onIdChangeHandler} buttonTitle="중복 확인" buttonStatus={idButtonStatus} onButtonClickHandler={onIdButtonClickHandler} message={idMessage} error={isIdError} />
+                <InputBox label="time-based-sqli  you must ....SLEEP(1.5), 1) about user" type="text" value={id} placeholder="user_id 'bagjuhyeong850' in?" onChangeHandler={onIdChangeHandler} buttonTitle="중복 확인" buttonStatus={idButtonStatus} onButtonClickHandler={onIdButtonClickHandler} message={idMessage} error={isIdError} />
                     
                 <InputBox label="delay Hint" type="password" value={password} placeholder="'anlab'+'google'+Reflected XSS+Blind SQLi" onChangeHandler={onPasswordChangeHandler} message={passwordMessage} error />
                 
