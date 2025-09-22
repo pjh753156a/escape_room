@@ -121,10 +121,19 @@ CREATE TABLE qna_detail_passwd (
 );
 
 INSERT INTO email_auth_number (email, auth_number)
-VALUES ('00g00@naver.com', '1234');
+VALUES ('bagjuhyeong850@gmail.com', '1234');
+
+INSERT INTO email_auth_number (email, auth_number)
+VALUES ('00-g-00@naver.com', '1234');
 
 INSERT INTO user (user_id, user_password, user_email, user_role, join_path) VALUES
-('IamWhiteHatHacker', 'qwer1234', '00g00@naver.com', 'ROLE_USER', 'HOME');
+('bagjuhyeong850', 'qwer1234', 'bagjuhyeong850@gmail.com', 'ROLE_USER', 'HOME');
+
+INSERT INTO user (user_id, user_password, user_email, user_role, join_path) VALUES
+('IamWhiteHatHacker', 'qwer1234', '00-g-00@naver.com', 'ROLE_USER', 'HOME');
+
+INSERT INTO board (title, contents, writer_id) VALUES
+( 'Hint', 'Stored XSS authenticationPasswd = ???? parent. parent. parent. ', 'bagjuhyeong850');
 
 INSERT INTO qna_write_passwd (user_id, qna_write_passwd) VALUES
 ('kim123', 'pass1'),
